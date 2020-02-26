@@ -18,9 +18,11 @@ def find_lyrics(driver, song_path):
     return lyrics
 
 
-DRIVER_PATH = "driver/chromedriver_windows"
-driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+# DRIVER_PATH = "driver/chromedriver_mac"
+# driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+driver = webdriver.Chrome()
 df = pd.read_csv("df.csv")
+artists = list(df['artist'])
 
 index = 0
 with open("start_index.txt", "r") as f:
@@ -30,6 +32,10 @@ with open("start_index.txt", "r") as f:
 artist_num = 0
 for artist in song_titles:
     print(artist_num, artist)
+    artist_num += 1
+    if artist in artists:
+        continue
+
     for title in song_titles[artist]:
         song_path = song_titles[artist][title]
         lyrics = find_lyrics(driver, song_path)
@@ -41,5 +47,3 @@ for artist in song_titles:
             f.close()
 
         df.to_csv("df.csv", index=False)
-    
-    artist_num += 1
