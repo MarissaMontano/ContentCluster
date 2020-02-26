@@ -1,6 +1,7 @@
 from selenium import webdriver
 import json
 import pandas as pd
+import time
 
 with open("song_titles.json") as f:
     song_titles = json.load(f)
@@ -13,11 +14,13 @@ def find_lyrics(driver, song_path):
     
     lyrics = driver.find_element_by_class_name("lyrics").text
     
+    time.sleep(2)
     return lyrics
 
 
-driver = webdriver.Chrome()
-df = pd.DataFrame(columns=["artist", "song_title", "song_path", "lyrics"])
+DRIVER_PATH = "driver/chromedriver_windows"
+driver = webdriver.Chrome(executable_path=DRIVER_PATH)
+df = pd.read_csv("df.csv")
 
 index = 0
 with open("start_index.txt", "r") as f:
@@ -35,7 +38,8 @@ for artist in song_titles:
         index += 1
         with open("start_index.txt", "w+") as f:
             f.write(str(index))
-            f.locs()
+            f.close()
+
+        df.to_csv("df.csv", index=False)
     
     artist_num += 1
-    break
